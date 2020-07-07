@@ -10,14 +10,24 @@ const CardList = styled.div`
 `;
 const Card = styled.div`
     width: 200px;
+    margin:50px;
     & img {
         width: 100%;
     }
 `;
 
+const Form = styled.form`
+    width:300px;
+    margin:auto;
+    margin-top:50px;
+    margin-bottom:50px;
+`;
+const Input = styled.input`
+    width:200px;
+    height:50px;
+`;
 export default function Github() {
-    const [datas, setDatas] = useState([]);
-     // eslint-disable-next-line
+    const [datas, setDatas] = useState({})
     const [name,setName ] = useState('');
     
     const fetchData = (async () => {
@@ -26,7 +36,7 @@ export default function Github() {
         const response = await fetch(url);
         const result = await response.json();
 
-        setDatas([result])
+        await setDatas(result)
     })
 
     useEffect(() => {
@@ -45,29 +55,35 @@ export default function Github() {
         const response = await fetch(url);
         const result = await response.json();
 
-        setDatas([result]);
-        console.log(datas.data);
+        setDatas(result);
+       
     });
    
     
-
+    console.log(datas);
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
 
-             <input type="text" name="name" id="name" placeholder="Search for GIF and enter" value={name} 
+             <Input type="text" name="name" id="name" placeholder="Search for GIF and enter" value={name} 
              onChange={handleChange}/>
-            </form>
+            </Form>
 
             <CardList id="content">
-                {datas.map((data) => {
-                    return (
-                    <Card>
-                        <img src={data.images_original_url} alt="gif"/>
-                    </Card>
-                    );
-                })}
-               
+            {datas.data !== undefined &&
+                    datas.data.map((item) => {
+
+                        return (
+                        
+
+                            <Card key={item.id}>
+                                <img src={item.images.original.url} alt="gif"/> 
+                                   
+                            </Card>
+                       
+                           
+                        );
+                    })}
             </CardList>
         </div>
     );
